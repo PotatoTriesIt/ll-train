@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>LL Trainer</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LL Trainer">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- Android / Chrome -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+
+<!-- iOS / Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LL Trainer">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ll-trainer.css">
+</head>
+<body>
+
+<!-- COLOR SETTINGS MODAL -->
+<div class="modal-overlay" id="colorModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>🎨 Colores del cubo</span>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-section-label">PRESETS</div>
+    <div class="preset-row" id="presetRow"></div>
+    <div class="modal-section-label">CARAS</div>
+    <div class="color-grid" id="colorGrid"></div>
+    <div class="io-row">
+      <button class="io-btn" id="exportBtn">↑ Exportar</button>
+      <button class="io-btn" id="importBtn">↓ Importar</button>
+      <input type="file" id="importInput" accept=".json">
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">LL<span>.</span><em>train</em></div>
+  <div class="mode-selector">
+    <button class="mode-btn active" data-mode="full">Full LL</button>
+    <button class="mode-btn" data-mode="oll">OLL</button>
+    <button class="mode-btn" data-mode="pll">PLL</button>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn" id="btnColors" title="Colores">🎨</button>
+  </div>
+</header>
+
+<div class="mobile-tabs">
+  <button class="tab-btn active" data-tab="timer">Timer</button>
+  <button class="tab-btn" data-tab="stats">Stats</button>
+  <button class="tab-btn" data-tab="algs">Por alg</button>
+</div>
+
+<div class="main-grid">
+
+  <!-- TIMER PANEL -->
+  <div class="tab-panel active" data-panel="timer">
+    <div class="card timer-card">
+
+      <div id="subsetSection" style="display:none;width:100%">
+        <div class="subset-label" id="subsetLabel">Tipo de caso</div>
+        <div class="subset-bar" id="subsetBar"></div>
+      </div>
+
+      <div class="alg-info-row" id="algInfoRow"></div>
+
+      <div class="cube-section">
+        <canvas id="cubeCanvas"></canvas>
+        <div class="scramble-pill" id="scrambleText">—</div>
+      </div>
+
+      <div class="touch-zone" id="touchZone">
+        <div class="timer-display" id="timerDisplay">0.000</div>
+        <div class="space-bar" id="spaceBar"></div>
+        <div class="timer-sub" id="timerSub">mantén para preparar · suelta para iniciar</div>
+      </div>
+
+      <div class="timer-hint">SPACE: preparar/parar · DELETE: borrar último</div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnNext">Siguiente →</button>
+        <button class="btn btn-ghost"   id="btnToggleCase">Ver caso</button>
+        <button class="btn btn-ghost"   id="btnToggle">Ver/ocultar alg</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-col">
+
+    <div class="tab-panel active" data-panel="stats">
+      <div class="card">
+        <div class="section-header">
+          <div class="card-title">Estadísticas</div>
+          <button class="btn btn-danger btn-clear-sm" id="btnClear">Limpiar</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-label">Intentos</div><div class="stat-value" id="sCount">0</div></div>
+          <div class="stat-box"><div class="stat-label">Promedio</div><div class="stat-value" id="sAvg">—</div></div>
+          <div class="stat-box"><div class="stat-label">Mejor</div><div class="stat-value best" id="sBest">—</div></div>
+          <div class="stat-box"><div class="stat-label">Peor</div><div class="stat-value worst" id="sWorst">—</div></div>
+          <div class="stat-box"><div class="stat-label">ao5</div><div class="stat-value" id="sAo5">—</div></div>
+          <div class="stat-box"><div class="stat-label">ao12</div><div class="stat-value" id="sAo12">—</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title card-title-mb">Historial</div>
+        <div class="history-list" id="historyList">
+          <div class="empty-hint">Sin intentos aún</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel active" data-panel="algs">
+      <div class="card alg-stats-card">
+        <div class="section-header section-header-flush">
+          <div class="card-title">Por algoritmo</div>
+          <span class="alg-meta-label">mejor · promedio</span>
+        </div>
+        <div class="alg-chips" id="algChips">
+          <div class="empty-hint">Sin datos aún</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="ll-trainer.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(r => console.log('SW registrado:', r.scope))
+        .catch(e => console.log('SW error:', e));
+    });
+  }
+</script>
+</body>
+</html>
