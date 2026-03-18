@@ -59,7 +59,7 @@
 ## 📁 Archivos
 
 ```
-ll-trainer.html   — HTML principal
+index.html        — HTML principal
 ll-trainer.css    — Estilos
 ll-trainer.js     — Lógica, motor de cubo, timer, stats
 manifest.json     — PWA manifest
@@ -67,7 +67,6 @@ sw.js             — Service Worker (caché offline)
 icon-192.png      — Ícono app 192×192
 icon-512.png      — Ícono app 512×512
 favicon.ico       — Favicon pestaña navegador
-favicon.svg       — Favicon SVG vectorial
 ```
 
 ---
